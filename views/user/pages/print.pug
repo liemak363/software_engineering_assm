@@ -1,11 +1,21 @@
+include ../mixins/notification.pug
+
 doctype html
 head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
   title Printing Management System
   link(href='https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css' rel='stylesheet')
+
+  //- for bootstrap 
+  link(href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css", rel="stylesheet")
   link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css')
   link(href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet')
+  link(href='/css/notification_style.css' rel='stylesheet')
+
++notification-error("10000")
++notification-success("10000")
+
 // Header
 header.w-full.bg-white.shadow-md.py-4
   .container.mx-auto.flex.items-center.justify-between.px-6
@@ -128,3 +138,9 @@ footer.w-full.bg-white.shadow-md.py-8.mt-8
       p.text-gray-600 Email: ssps@hcmut.edu.vn
 
 script(src='/script/printer_location.js')
+script(src='/script/notification.js')
+
+//- for bootstrap
+script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js")
+script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js")
+script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js")

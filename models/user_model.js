@@ -130,7 +130,7 @@ module.exports.getPermittedType = () => {
             else resolve(results[0]);
         }
         connection.query(
-            `SELECT pdf, doc, pptx, png, jpg FROM CONFIG; `,
+            `SELECT pdf, docx, pptx, png, jpg FROM CONFIG; `,
             func
         )
     })
@@ -207,10 +207,6 @@ module.exports.filterLog = (startDate, endDate, printerID, userID) => {
     else endDateCond = 'true'
     if (printerID) printerIDCond = `"Mã máy in" = '${printerID}'`
     else printerIDCond = 'true'
-
-    console.log(startDateCond)
-    console.log(endDateCond)
-    console.log(printerIDCond);
 
     return new Promise((resolve, reject) => {
         function func(err, results, fields) {
@@ -521,12 +517,12 @@ module.exports.getConfig = () => {
     })
 }
 
-module.exports.updateConfig = (providingDate, paperPerMonth, pdf, doc, pptx, png, jpg) => {
+module.exports.updateConfig = (providingDate, paperPerMonth, pdf, docx, pptx, png, jpg) => {
     let pdfCond, docCond, pptxCond, pngCond, jpgCond;
 
     if (pdf) pdfCond = 1;
     else pdfCond = 0;
-    if (doc) docCond = 1;
+    if (docx) docCond = 1;
     else docCond = 0;
     if (pptx) pptxCond = 1;
     else pptxCond = 0;
@@ -543,7 +539,7 @@ module.exports.updateConfig = (providingDate, paperPerMonth, pdf, doc, pptx, png
         connection.query(
             `UPDATE CONFIG
             SET providingDate = ${providingDate}, paperPerMonth = ${paperPerMonth},
-                pdf = ${pdfCond}, doc = ${docCond}, pptx = ${pptxCond},
+                pdf = ${pdfCond}, docx = ${docCond}, pptx = ${pptxCond},
                 png = ${pngCond}, jpg = ${jpgCond}
             WHERE providingDate > 0`,
             func

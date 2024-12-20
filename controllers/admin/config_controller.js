@@ -15,12 +15,12 @@ module.exports.updateConfig = async (req, res) => {
     const providingDate = req.body.providingDate;
     const paperPerMonth = req.body.paperPerMonth;
     const pdf = req.body.pdf;
-    const doc = req.body.doc;
+    const docx = req.body.docx;
     const pptx = req.body.pptx;
     const png = req.body.png;
     const jpg = req.body.jpg;
 
-    await userModel.updateConfig(providingDate, paperPerMonth, pdf, doc, pptx, png, jpg);
+    await userModel.updateConfig(providingDate, paperPerMonth, pdf, docx, pptx, png, jpg);
 
     res.redirect(`${prefixAdmin}/config`)
 }

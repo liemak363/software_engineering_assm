@@ -76,32 +76,23 @@ module.exports.print = async (req, res) => {
     const paperSize = req.body.paper_size
     const pagesPerPaper = req.body.pages_per_paper
     const doubleSide = req.body.double_sided
-    
-    console.log("filename: ", filename)
-    console.log("userID: '" + userID + "'")
-    console.log("printerID: '" + printerID + "'")
-    console.log("paperSize: '" + paperSize + "'")
-    console.log("pagesPerPaper: ", pagesPerPaper)
-    console.log("doubleSide: ", doubleSide)
 
     let pageNum;
     if (doubleSide) pageNum = Math.ceil(pageCount / (pagesPerPaper * 2))
     else pageNum = Math.ceil(pageCount / pagesPerPaper);
 
     pageNum = parseInt(pageNum);
-    console.log("pageNum: ", pageNum)
 
     const hasEnoughPaper = await userModel.hasEnoughPaper(userID, paperSize, pageNum);
     if (!hasEnoughPaper) {
+        req.flash('error', 'Số dư giấy không đủ');
         res.redirect("/print");
         return;
     }
 
-    console.log("ok")
     await userModel.updatePrintHistory(userID, printerID, filename, paperSize, pageNum);
-    console.log("ok")
     await userModel.updateRemainingPaper(userID, paperSize, pageNum);
-    console.log("ok")
 
+    req.flash('success', 'Gửi yêu cầu thành công');
     res.redirect("/print")
 }

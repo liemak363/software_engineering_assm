@@ -5,15 +5,14 @@ const { SECRET_ACCESS_TOKEN } = require("../configs/system.js")
 
 module.exports.verify = async (req, res, next) => {
     try {
-        const authHeader = req.headers["cookie"]; // get the session cookie from request header
+        const authHeader = req.signedCookies // get the session cookie from request header
 
         if (!authHeader) {
             res.redirect("/role");
             return;
         } 
-        const cookie = authHeader.split("=")[1]; // If there is, split the cookie string to get the actual jwt
 
-        const accessToken = cookie.split(";")[0];
+        const accessToken = authHeader.SessionID
         const checkIfBlacklisted = await Blacklist.findOne({ token: accessToken }); // Check if that token is blacklisted
         // if true, send an unathorized message, asking for a re-authentication.
         if (checkIfBlacklisted) {
@@ -25,7 +24,7 @@ module.exports.verify = async (req, res, next) => {
 
         // Verify using jwt to see if token has been tampered with or if it has expired.
         // that's like checking the integrity of the cookie
-        jwt.verify(cookie, SECRET_ACCESS_TOKEN, async (err, decoded) => {
+        jwt.verify(accessToken, SECRET_ACCESS_TOKEN, async (err, decoded) => {
             if (err) {
                 // if token has been altered or has expired, return an unauthorized error
                 res.redirect("/role");

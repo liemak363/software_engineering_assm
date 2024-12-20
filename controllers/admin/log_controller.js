@@ -13,7 +13,6 @@ module.exports.home = async (req, res) => {
     const studentID = req.query.studentID;
 
     const logs = await userModel.getLogAdmin(page, startDate, endDate, printerID, studentID);
-    console.log(logs)
 
     const totalLog = await userModel.getTotalLogAdmin(startDate, endDate, printerID, studentID);
 

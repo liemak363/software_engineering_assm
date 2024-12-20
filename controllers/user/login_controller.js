@@ -24,6 +24,7 @@ module.exports.verify = async (req, res) => {
         httpOnly: true, // The cookie is only accessible by the web server
         secure: true,
         sameSite: "None",
+        signed: true
     };
     const token = helper.generateAccessJWT(userID, "user"); // generate session token for user
     res.cookie("SessionID", token, options); // set the token to response header, so that the client sends it back on each subsequent request

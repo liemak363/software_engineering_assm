@@ -64,14 +64,14 @@ head
               if configInfo.pdf
                 input#pdf.mr-2(type='checkbox' name='pdf' checked)
               else 
-                input#pdf.mr-2(type='checkbox' name='pdf' checked)
+                input#pdf.mr-2(type='checkbox' name='pdf')
               label.text-sm.font-semibold.text-gray-700(for='pdf') pdf
             .mb-4.flex.items-center
               if configInfo.doc
-                input#doc.mr-2(type='checkbox' name='doc' checked)
+                input#doc.mr-2(type='checkbox' name='docx' checked)
               else
-                input#doc.mr-2(type='checkbox' name='doc')
-              label.text-sm.font-semibold.text-gray-700(for='doc') doc
+                input#doc.mr-2(type='checkbox' name='docx')
+              label.text-sm.font-semibold.text-gray-700(for='docx') docx
             .mb-4.flex.items-center
               if configInfo.pptx 
                 input#pptx.mr-2(type='checkbox' name='pptx' checked)
