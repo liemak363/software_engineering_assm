@@ -3,10 +3,10 @@ const userModel = require("../models/user_model.js")
 const Blacklist = require("../models/blacklist_model.js")
 const { SECRET_ACCESS_TOKEN } = require("../configs/system.js")
 
-const decode_token = async (res, token) => {
+const decode_token = async (res, token, handleUnverifiedToken) => {
     try {
         if (!token) {
-            res.redirect("/role");
+            handleUnverifiedToken()
             return;
         }
 
@@ -14,7 +14,7 @@ const decode_token = async (res, token) => {
         const checkIfBlacklisted = await Blacklist.findOne({ token: accessToken }); // Check if that token is blacklisted
         // if true, send an unathorized message, asking for a re-authentication.
         if (checkIfBlacklisted) {
-            res.redirect("/role");
+            handleUnverifiedToken()
             return;
         }
         // if token has not been blacklisted, verify with jwt to see if it has been tampered with or not.
@@ -27,7 +27,7 @@ const decode_token = async (res, token) => {
         jwt.verify(accessToken, SECRET_ACCESS_TOKEN, async (err, decoded) => {
             if (err) {
                 // if token has been altered or has expired, return an unauthorized error
-                res.redirect("/role");
+                handleUnverifiedToken()
                 return;
             }
 
@@ -48,7 +48,9 @@ const decode_token = async (res, token) => {
 
 const verify = async (req, res, next, role) => {
     const authHeader = req.signedCookies
-    const decoded = await decode_token(res, authHeader)
+    const decoded = await decode_token(res, authHeader, () => {
+        res.redirect("/role");
+    })
 
     if (decoded) {
         if (decoded.role !== role) {
@@ -71,7 +73,9 @@ module.exports.verify_admin = async (req, res, next) => {
 
 module.exports.check_role = async (req, res, next) => {
     const authHeader = req.signedCookies
-    const decoded = await decode_token(res, authHeader)
+    const decoded = await decode_token(res, authHeader, () => {
+        next();
+    })
 
     if (decoded) {
         if (decoded.role === "admin") {
