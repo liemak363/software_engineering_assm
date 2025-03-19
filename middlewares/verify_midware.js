@@ -3,7 +3,7 @@ const userModel = require("../models/user_model.js")
 const Blacklist = require("../models/blacklist_model.js")
 const { SECRET_ACCESS_TOKEN } = require("../configs/system.js")
 
-module.exports.verify = async (req, res, next) => {
+const verify = async (req, res, next, role) => {
     try {
         const authHeader = req.signedCookies // get the session cookie from request header
 
@@ -31,6 +31,11 @@ module.exports.verify = async (req, res, next) => {
                 return;
             }
 
+            if (decoded.role !== role) {
+                res.send("you are not authorized to access this page");
+                return;
+            }
+
             req.user = decoded.id; // put the data object into req.user
             next();
         });
@@ -42,4 +47,12 @@ module.exports.verify = async (req, res, next) => {
             message: "Internal Server Error",
         });
     }
+}
+
+module.exports.verify_user = async (req, res, next) => {
+    await verify(req, res, next, "user");
+}
+
+module.exports.verify_admin = async (req, res, next) => {
+    await verify(req, res, next, "admin");
 }
