@@ -1,7 +1,8 @@
-const {prefixAdmin} = require("../../configs/system.js")
+const { prefixAdmin } = require("../../configs/system.js")
 
 const helper = require("../../helper.js")
 const userModel = require("../../models/user_model.js")
+const bcrypt = require("bcrypt");
 
 // [GET] /admin/login
 module.exports.home = async (req, res) => {
@@ -12,9 +13,18 @@ module.exports.home = async (req, res) => {
 module.exports.verify = async (req, res) => {
     // console.log(req.body)
     const userEmail = req.body.email;
+    const userPass = req.body.password;
     const isExisting = await userModel.checkAdminEmail(userEmail);
 
     if (!isExisting) {
+        res.redirect(`${prefixAdmin}/login`);
+        return;
+    }
+
+    const userPassSaved = await userModel.getAdminPass(userEmail);
+    const isPasswordValid = await bcrypt.compare(userPass, userPassSaved);
+
+    if (!isPasswordValid) {
         res.redirect(`${prefixAdmin}/login`);
         return;
     }

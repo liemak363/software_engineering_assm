@@ -47,6 +47,20 @@ module.exports.getUserID = (userEmail) => {
     })
 }
 
+module.exports.getUserPass = (userEmail) => {
+    return new Promise((resolve, reject) => {
+        function func(err, results, fields) {
+            if (err) reject(err);
+            else resolve(results[0]['password']);
+        }
+        connection.query(
+            `SELECT password
+            FROM user_profile
+            WHERE Email = '${userEmail}'`,
+            func
+        )
+    })
+}
 
 module.exports.checkAdminEmail = (userEmail) => {
     return new Promise((resolve, reject) => {
@@ -75,6 +89,21 @@ module.exports.getAdminID = (userEmail) => {
         }
         connection.query(
             `SELECT ID
+            FROM admin_profile
+            WHERE Email = '${userEmail}'`,
+            func
+        )
+    })
+}
+
+module.exports.getAdminPass = (userEmail) => {
+    return new Promise((resolve, reject) => {
+        function func(err, results, fields) {
+            if (err) reject(err);
+            else resolve(results[0]['password']);
+        }
+        connection.query(
+            `SELECT password
             FROM admin_profile
             WHERE Email = '${userEmail}'`,
             func

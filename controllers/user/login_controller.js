@@ -1,5 +1,6 @@
 const helper = require("../../helper.js")
 const userModel = require("../../models/user_model.js")
+const bcrypt = require("bcrypt");
 
 // [GET] /login
 module.exports.home = async (req, res) => {
@@ -10,9 +11,18 @@ module.exports.home = async (req, res) => {
 module.exports.verify = async (req, res) => {
     // console.log(req.body)
     const userEmail = req.body.userID;
+    const userPass = req.body.password;
     const isExisting = await userModel.checkUserEmail(userEmail);
 
     if (!isExisting) {
+        res.redirect("/login");
+        return;
+    }
+
+    const userPassSaved = await userModel.getUserPass(userEmail);
+    const isPasswordValid = await bcrypt.compare(userPass, userPassSaved);
+
+    if (!isPasswordValid) {
         res.redirect("/login");
         return;
     }
